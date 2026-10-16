@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>高级PPT五步生成法</title>
+  <meta name="description" content="通过五步问答，把你的PPT想法整理成AI能够直接执行的指令。">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="overrides.css">
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" id="homeBtn" aria-label="返回首页"><span>WORKBODY</span> 高级PPT五步生成法</button>
+    <div class="progress-mini" id="progressMini">尚未开始</div>
+  </header>
+
+  <main>
+    <section class="home active" id="home">
+      <div class="hero">
+        <p class="eyebrow">PPT PROMPT BUILDER</p>
+        <h1>高级PPT<br><span>五步生成法</span></h1>
+        <p class="lead">把脑海中的模糊想法，一步一步整理成 AI 真正听得懂、做得出的完整指令。</p>
+        <button class="primary" data-start="0">开始生成我的PPT指令 <span>→</span></button>
+      </div>
+      <div class="steps-grid" id="stepsGrid"></div>
+    </section>
+
+    <section class="wizard" id="wizard">
+      <aside class="side">
+        <button class="back-home" id="backHome">← 返回五步首页</button>
+        <div class="side-title">你的生成进度</div>
+        <nav id="sideSteps"></nav>
+        <div class="side-tip"><b>使用方法</b><br>先选择最接近的答案，再补充自己的想法。没有想法时，可以直接交给 AI。</div>
+      </aside>
+
+      <div class="workspace">
+        <div class="step-head">
+          <div class="step-number" id="stepNumber">01</div>
+          <div><h2 id="stepTitle"></h2><p id="stepDesc"></p></div>
+        </div>
+        <div class="question-list" id="questionList"></div>
+
+        <section class="prompt-box">
+          <div class="prompt-head">
+            <div><span>AI 对话语言</span><h3>这一阶段的完整指令</h3></div>
+            <button class="copy-btn" id="copyBtn">复制完整指令</button>
+          </div>
+          <pre id="promptOutput"></pre>
+        </section>
+
+        <div class="nav-actions">
+          <button class="secondary" id="prevBtn">上一步</button>
+          <button class="primary" id="nextBtn">保存并进入下一步 <span>→</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" id="final">
+      <div class="final-wrap">
+        <p class="eyebrow">YOUR COMPLETE AI BRIEF</p>
+        <h2>你的高级PPT<br>完整制作指令</h2>
+        <p>五步思考已经整理完成。你可以一次复制全部内容，也可以返回任意步骤继续修改。</p>
+        <div class="final-actions"><button class="primary" id="copyAll">复制全部指令</button><button class="secondary" id="editAgain">返回修改</button></div>
+        <pre id="allPrompt"></pre>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">已复制到剪贴板</div>
+  <script src="app.js"></script>
+</body>
+</html>
