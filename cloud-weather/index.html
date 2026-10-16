@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>3分钟学会看云识天气</title>
+  <meta name="description" content="认识积云、层云和积雨云，完成看图挑战。" />
+  <style>
+    :root{--blue:#328fc7;--navy:#173b4f;--sky:#dff4ff;--cream:#fff9ee;--green:#4ea873;--coral:#ee806a;--muted:#5c7482;--line:#c9e0ea}
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--navy);background:linear-gradient(180deg,#cfeeff 0,#f8fcff 55%,#fffaf0 100%);min-height:100vh}
+    button{font:inherit}.app{min-height:100vh;display:flex;flex-direction:column}.topbar{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,5vw,72px)}
+    .brand{font-weight:800;letter-spacing:.02em;border:0;background:transparent;color:var(--navy);padding:10px 0;cursor:pointer}.brand:hover{color:var(--blue)}.progress{display:flex;gap:8px;align-items:center}.dot{width:9px;height:9px;border-radius:50%;background:#fff;border:1px solid var(--line)}.dot.on{background:var(--blue);border-color:var(--blue)}
+    main{flex:1;display:grid;place-items:center;padding:20px}.screen{display:none;width:min(1080px,100%);animation:fade .35s ease}.screen.active{display:block}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;min-height:560px}.eyebrow{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700;color:var(--blue)}
+    h1{font-size:clamp(42px,7vw,76px);line-height:1.08;margin:22px 0 18px;letter-spacing:-.04em}h2{font-size:clamp(30px,4vw,46px);margin:0 0 12px}p{line-height:1.8;color:var(--muted)}
+    .btn{border:0;border-radius:16px;padding:16px 28px;font-weight:800;cursor:pointer;transition:.2s;box-shadow:0 10px 28px rgba(29,101,140,.18)}.btn:hover{transform:translateY(-2px)}.primary{background:var(--blue);color:#fff}.secondary{background:#fff;color:var(--navy);border:1px solid var(--line);box-shadow:none}
+    .sky-stage{height:390px;border-radius:38px;background:linear-gradient(#87d4f6,#dff5ff);position:relative;overflow:hidden;box-shadow:inset 0 -50px 100px rgba(255,255,255,.45),0 24px 60px rgba(43,129,176,.15)}
+    .sun{width:92px;height:92px;background:#ffd16f;border-radius:50%;position:absolute;right:42px;top:36px;box-shadow:0 0 0 18px rgba(255,209,111,.18)}
+    .cloud{position:absolute;width:160px;height:62px;background:#fff;border-radius:60px;filter:drop-shadow(0 10px 8px rgba(51,122,157,.12))}.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}.cloud:before{width:76px;height:76px;left:27px;top:-35px}.cloud:after{width:90px;height:90px;right:18px;top:-48px}.c1{left:35px;top:165px;transform:scale(.82)}.c2{left:205px;top:95px;transform:scale(1.1)}.c3{right:40px;bottom:65px;transform:scale(.7)}
+    .section-head{text-align:center;margin-bottom:32px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.card{background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:26px;padding:22px;cursor:pointer;transition:.25s;box-shadow:0 14px 38px rgba(42,111,148,.08)}.card:hover{transform:translateY(-6px);box-shadow:0 20px 46px rgba(42,111,148,.15)}
+    .cloud-thumb{height:175px;border-radius:20px;background:linear-gradient(#9fdcf6,#e7f8ff);position:relative;overflow:hidden;margin-bottom:20px}.cloud-photo{width:100%;height:100%;display:block;object-fit:cover}.card h3{font-size:25px;margin:8px 0}.tag{font-size:13px;font-weight:800;color:var(--blue)}
+    .mini-cloud{position:absolute;background:#fff;border-radius:60px}.mini-cloud.cumulus{width:116px;height:44px;left:50%;top:58%;transform:translate(-50%,-50%)}.mini-cloud.cumulus:before,.mini-cloud.cumulus:after{content:"";position:absolute;background:#fff;border-radius:50%}.mini-cloud.cumulus:before{width:58px;height:58px;left:14px;top:-32px}.mini-cloud.cumulus:after{width:70px;height:70px;right:8px;top:-40px}
+    .mini-cloud.stratus{width:190px;height:50px;left:50%;top:50%;transform:translate(-50%,-50%);background:#d2dde2;box-shadow:0 25px 0 #dbe5e8,-55px -15px 0 -8px #d2dde2,55px -8px 0 -5px #c8d5da}
+    .storm{position:absolute;width:128px;height:62px;border-radius:60px;background:#657681;left:50%;top:42%;transform:translate(-50%,-50%)}.storm:before,.storm:after{content:"";position:absolute;border-radius:50%;background:#657681}.storm:before{width:74px;height:74px;left:10px;top:-34px}.storm:after{width:82px;height:82px;right:5px;top:-42px}.bolt{position:absolute;left:48%;top:60%;font-size:54px;color:#ffd45c}
+    .detail{display:grid;grid-template-columns:.9fr 1.1fr;gap:42px;align-items:center}.detail-panel{background:#fff;border:1px solid var(--line);border-radius:30px;padding:34px}.fact{padding:18px 0;border-bottom:1px solid #e7f0f4}.fact:last-child{border:0}.fact b{display:block;margin-bottom:7px}.rhyme{background:var(--cream);border-radius:18px;padding:18px 20px;font-size:20px;font-weight:800;color:var(--navy)}.actions{display:flex;gap:12px;margin-top:24px}
+    .quiz-wrap{max-width:760px;margin:auto;text-align:center}.quiz-count{font-size:14px;font-weight:800;color:var(--blue);margin-top:10px}.quiz-image{height:310px;border-radius:30px;background:linear-gradient(#8dd3f2,#e9f8ff);position:relative;margin:22px 0;border:1px solid var(--line);overflow:hidden}.quiz-image.text-question{height:220px;display:grid;place-items:center;padding:34px;background:var(--cream);font-size:26px;font-weight:800;line-height:1.55}.options{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.option{background:#fff;border:2px solid transparent;border-radius:16px;padding:15px;cursor:pointer;font-weight:800;color:var(--navy)}.option:hover{border-color:var(--blue)}.option:disabled{cursor:default;opacity:.72}.feedback{min-height:58px;margin:16px 0 8px;font-weight:700}.correct{color:var(--green)}.wrong{color:var(--coral)}
+    .result{text-align:center;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:34px;padding:60px 30px;max-width:760px;margin:auto}.badge{width:120px;height:120px;border-radius:50%;background:#e6f7ed;color:var(--green);display:grid;place-items:center;font-size:60px;margin:0 auto 24px}
+    .footer{text-align:center;padding:18px;color:#78909c;font-size:13px}@media(max-width:800px){.hero,.detail{grid-template-columns:1fr}.hero{padding-top:20px}.sky-stage{height:300px}.cards{grid-template-columns:1fr}.options{grid-template-columns:1fr}.topbar{height:60px}.card{display:grid;grid-template-columns:140px 1fr;gap:16px}.cloud-thumb{height:130px;margin:0}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar"><button class="brand" type="button" onclick="restart()" aria-label="返回首页">☁ 云朵天气员</button><div class="progress" aria-label="学习进度"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></header>
+  <main>
+    <section id="home" class="screen active"><div class="hero"><div><span class="eyebrow">一堂3分钟的天空微课</span><h1>学会看云<br>就能猜天气</h1><p>认识三位“天空天气员”，最后完成一场看图挑战。</p><button class="btn primary" onclick="go('learn',1)">开始学习</button></div><div class="sky-stage" aria-label="蓝天与云朵插画"><div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div></div></section>
+    <section id="learn" class="screen"><div class="section-head"><span class="eyebrow">第一步</span><h2>认识三种常见的云</h2><p>点击卡片，看看它长什么样，又在提醒我们什么。</p></div><div class="cards">
+      <article class="card" onclick="openCloud('cumulus')"><div class="cloud-thumb"><img class="cloud-photo" src="assets/cumulus.jpg" alt="蓝天下洁白蓬松的积云"></div><div><span class="tag">晴天朋友</span><h3>积云</h3><p>像一团蓬松的白棉花，通常代表天气比较稳定。</p></div></article>
+      <article class="card" onclick="openCloud('stratus')"><div class="cloud-thumb"><img class="cloud-photo" src="assets/stratus.jpg" alt="低矮灰暗并铺满天空的层云"></div><div><span class="tag">天空灰被</span><h3>层云</h3><p>像一床灰色的被子铺满天空，有时会带来小雨。</p></div></article>
+      <article class="card" onclick="openCloud('storm')"><div class="cloud-thumb"><img class="cloud-photo" src="assets/cumulonimbus.jpg" alt="高大浓厚并伴随闪电的积雨云"></div><div><span class="tag">雷雨信号</span><h3>积雨云</h3><p>又高又厚、底部较暗，可能带来雷雨和大风。</p></div></article>
+    </div></section>
+    <section id="detail" class="screen"><div class="detail"><div id="detailArt" class="cloud-thumb" style="height:420px"></div><div class="detail-panel"><span id="detailTag" class="eyebrow"></span><h2 id="detailTitle" style="margin-top:18px"></h2><div class="fact"><b>它长什么样</b><span id="detailLook"></span></div><div class="fact"><b>它在提醒什么</b><span id="detailWeather"></span></div><div id="detailRhyme" class="rhyme"></div><div class="actions"><button class="btn secondary" onclick="go('learn',1)">再看其他云</button><button class="btn primary" onclick="go('quiz',2)">我学会了，去挑战</button></div></div></div></section>
+    <section id="quiz" class="screen"><div class="quiz-wrap"><span class="eyebrow">第二步</span><div id="quizCount" class="quiz-count">第 1 / 6 题</div><h2 id="quizTitle">看图识云</h2><p id="quizPrompt"></p><div id="quizMedia" class="quiz-image"></div><div id="quizOptions" class="options"></div><div id="feedback" class="feedback"></div><button id="nextBtn" class="btn primary" style="display:none" onclick="nextQuestion()">下一题</button></div></section>
+    <section id="result" class="screen"><div class="result"><div class="badge">✓</div><span class="eyebrow">学习完成</span><h2 id="resultTitle" style="margin-top:18px">你已经会看云识天气了</h2><p id="scoreText" style="font-size:24px;font-weight:800;color:var(--navy)"></p><p id="resultTip">白白一团棉，多半是积云；灰被铺满天，可能是层云；云朵向上长，还带闪电，要留意积雨云。</p><button class="btn primary" onclick="restart()">再学一次</button></div></section>
+  </main>
+  <footer class="footer">抬头看天空，把今天学到的知识用起来。</footer>
+</div>
+<script>
+  const data={
+    cumulus:{tag:'晴天朋友',title:'积云',look:'洁白、蓬松，像一团一团的棉花。',weather:'通常说明空气比较稳定，天气往往不错。',rhyme:'白白一团棉，天气多半晴。',art:'<img class="cloud-photo" src="assets/cumulus.jpg" alt="蓝天下洁白蓬松的积云">'},
+    stratus:{tag:'天空灰被',title:'层云',look:'灰色、低矮，常常一大片铺在天空。',weather:'天空容易阴沉，有时会出现毛毛雨或小雨。',rhyme:'灰被铺满天，阴雨可能见。',art:'<img class="cloud-photo" src="assets/stratus.jpg" alt="低矮灰暗的层云">'},
+    storm:{tag:'雷雨信号',title:'积雨云',look:'又高、又厚，底部颜色较暗。',weather:'可能带来雷雨、短时大风，甚至冰雹。',rhyme:'云朵向上长，雷雨可能到。',art:'<img class="cloud-photo" src="assets/cumulonimbus.jpg" alt="高大并伴随闪电的积雨云">'}
+  };
+  const questions=[
+    {title:'看图识云',prompt:'图片中的云洁白、蓬松，像一团团棉花。它是什么云？',image:'assets/cumulus.jpg',answer:'积云',explain:'洁白、蓬松、团状，是积云最明显的特点。'},
+    {title:'看图识云',prompt:'图片中的灰色云层低矮，并大面积铺满天空。它是什么云？',image:'assets/stratus.jpg',answer:'层云',explain:'灰色、低矮、像被子一样铺开，是层云。'},
+    {title:'看图识云',prompt:'图片中的云体高大浓厚，并伴随雷电。它是什么云？',image:'assets/cumulonimbus.jpg',answer:'积雨云',explain:'高大、厚重并伴随雷电，是积雨云。'},
+    {title:'根据外形判断',prompt:'“白白一团棉，天气多半晴”说的是哪一种云？',answer:'积云',explain:'积云像蓬松的白棉花，通常表示天气较稳定。'},
+    {title:'根据天气判断',prompt:'天空像盖了一床灰色的被子，有时还会下毛毛雨。这是哪一种云？',answer:'层云',explain:'层云常常低矮地铺满天空，容易带来阴天或小雨。'},
+    {title:'根据天气判断',prompt:'天气预报提示可能出现雷雨、短时大风甚至冰雹。应该重点观察哪一种云？',answer:'积雨云',explain:'积雨云发展强烈，常带来雷雨、大风或冰雹。'}
+  ];
+  let quizIndex=0,score=0,answered=false;
+  function go(id,step){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i<=step));if(id==='quiz'&&quizIndex===0&&!answered)renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
+  function openCloud(type){const d=data[type];document.getElementById('detailTag').textContent=d.tag;document.getElementById('detailTitle').textContent=d.title;document.getElementById('detailLook').textContent=d.look;document.getElementById('detailWeather').textContent=d.weather;document.getElementById('detailRhyme').textContent=d.rhyme;document.getElementById('detailArt').innerHTML=d.art;go('detail',2)}
+  function renderQuestion(){const q=questions[quizIndex];answered=false;document.getElementById('quizCount').textContent=`第 ${quizIndex+1} / ${questions.length} 题`;document.getElementById('quizTitle').textContent=q.title;document.getElementById('quizPrompt').textContent=q.prompt;const media=document.getElementById('quizMedia');media.className='quiz-image'+(q.image?'':' text-question');media.innerHTML=q.image?`<img class="cloud-photo" src="${q.image}" alt="题目云朵照片">`:`<span>${q.prompt}</span>`;if(!q.image)document.getElementById('quizPrompt').textContent='请根据下面的描述作答。';document.getElementById('quizOptions').innerHTML=['积云','层云','积雨云'].map(v=>`<button class="option" onclick="answer('${v}')">${v}</button>`).join('');document.getElementById('feedback').textContent='';document.getElementById('feedback').className='feedback';document.getElementById('nextBtn').style.display='none'}
+  function answer(choice){if(answered)return;answered=true;const q=questions[quizIndex],ok=choice===q.answer;if(ok)score++;const f=document.getElementById('feedback');f.className='feedback '+(ok?'correct':'wrong');f.textContent=ok?'答对了！'+q.explain:`正确答案是“${q.answer}”。${q.explain}`;document.querySelectorAll('#quizOptions .option').forEach(b=>b.disabled=true);const btn=document.getElementById('nextBtn');btn.textContent=quizIndex===questions.length-1?'查看学习结果':'下一题';btn.style.display='inline-block'}
+  function nextQuestion(){if(quizIndex<questions.length-1){quizIndex++;renderQuestion()}else{showResult()}}
+  function showResult(){document.getElementById('scoreText').textContent=`6题中答对 ${score} 题`;document.getElementById('resultTitle').textContent=score===6?'太棒了，全部答对！':score>=4?'你已经掌握大部分知识':'再复习一次会更牢固';document.getElementById('resultTip').textContent=score===6?'你已经能从外形和天气现象判断积云、层云和积雨云。':'再看一遍三张云朵卡片，重点比较它们的颜色、高度和可能带来的天气。';go('result',3)}
+  function restart(){quizIndex=0;score=0;answered=false;document.getElementById('feedback').textContent='';go('home',0)}
+</script>
+</body>
+</html>
