@@ -1068,6 +1068,7 @@ h1,h2,h3,.cardhead,.flab>span:first-child{letter-spacing:-.035em}p{color:var(--i
       <p class="lead">按顺序复制给 AI，一份一份来。</p>
     </div>
   </div>
+  <div class="namerule"><b>首版原则：</b>先快速做出能运行、能操作、能说明核心知识点的版本；优先保证教学准确、核心交互完整和真实可用，装饰与附加功能后续再完善。</div>
   <div id="doneBox"></div>
   <div class="actions">
     <button class="btn ghost" type="button" id="resetAll"><i class="ico" data-ic="refresh"></i>清空重来</button>
@@ -2044,6 +2045,10 @@ function audienceText(){
 
 function export1(){
   var L = [];
+  L.push('1、请先快速做出一个能运行、能操作、能说明核心知识点的版本。优先保证教学内容准确、核心交互完整，可有可无的装饰和附加功能暂缓，后续再逐步完善。');
+  L.push('');
+  L.push('2、首版应能直接打开体验，核心动画和操作必须真实可用。用户明确要求的内容优先保留。');
+  L.push('');
   L.push('【第 1 步 · 可点击的视觉框架】');
   L.push('');
   L.push('请帮我做一个学习网页的「可点击框架」。这一步只搭结构、定样子，先不要写正式内容、不要找素材。');
